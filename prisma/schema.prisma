@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum State {
+  good
+  well
+  bad
+}
+
+model User {
+  userId String @id @default(cuid()) @map("user_id")
+  vkId   String @unique @map("vk_id")
+
+  givenBooks   Int? @map("given_books")
+  recievdBooks Int? @map("recieved_books")
+
+  city    String
+  regDate DateTime @default(now()) @map("reg_date")
+
+  favourites Favourites[]
+  books      Book[]
+  shelf      Shelf[]
+}
+
+model Book {
+  id String @id @default(cuid())
+
+  categoryId    Category? @relation(fields: [categoryTitle], references: [title])
+  categoryTitle String    @map("category_title")
+
+  authorid Author? @relation(fields: [author], references: [name])
+  author   String?
+
+  ownerid User?   @relation(fields: [owner], references: [userId])
+  owner   String?
+
+  isbn  String
+  title String
+  state String
+
+  fav       Favourites? @relation(fields: [favourite], references: [id])
+  favourite String?
+
+  shelfId Shelf?  @relation(fields: [shelf], references: [id])
+  shelf   String?
+
+  releaseDate DateTime @default(now()) @map("release_date")
+
+  description String?
+  images      Image[]
+}
+
+model Category {
+  id        String @id @default(cuid())
+  title     String @unique
+  imageName String @map("image_name")
+  books     Book[]
+}
+
+model Author {
+  id    String @id @default(cuid())
+  name  String @unique
+  books Book[]
+}
+
+model Shelf {
+  id     String @id @default(cuid())
+  books  Book[]
+  user   User   @relation(fields: [userId], references: [userId])
+  userId String @unique
+}
+
+model Image {
+  id       String @id @default(cuid())
+  path     String
+  filename String
+  book     Book   @relation(fields: [bookId], references: [id])
+  bookId   String @map("book_id")
+}
+
+model Favourites {
+  id     String @id @default(uuid())
+  userId User   @relation(fields: [user], references: [userId])
+  user   String @unique
+  books  Book[]
+}
