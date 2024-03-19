@@ -11,34 +11,36 @@ export class UserService {
   async create(data: CreateUserDto) {
     try {
       const user = await this.CreateUser(data)
-      const shelf = await this.CreateShelf(data, user.userId)
+      const shelf = await this.CreateShelf(user.userId)
 
-      return {user: user, shelf: shelf}
-      
+      return { user: user, shelf: shelf }
+
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.CONFLICT)
     }
   }
 
-  async CreateUser(data: CreateUserDto){
+  async CreateUser(data: CreateUserDto) {
     return await this.prismaService.user.create({
       data: {
         vkId: data.vkid,
-        givenBooks: data.givenBooks,
-        recievdBooks: data.recievdBooks,
         city: data.city,
+        name: data.name,
+        surName: data.surName,
       }
     });
   }
 
-  async CreateShelf(data: CreateUserDto, userId:string){
+  async CreateShelf(userId: string) {
     return this.prismaService.shelf.create({
       data: {
-        userId: userId
+        userId: userId,
+        books: {
+          create: []
+        }
       }
     });
   }
-
 
   async findAll() {
     try {
@@ -50,11 +52,54 @@ export class UserService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    try {
+      const user = await this.FindCurrentUser(id);
+      return user;
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  };
+
+  async FindCurrentUser(vkid: string) {
+    return this.prismaService.user.findUnique({
+      where: {
+        vkId: vkid
+      }
+    });
+  };
+
+  async FindShelfByUserId(userId: string) {
+    return this.prismaService.shelf.findUnique({
+      where: {
+        userId: userId
+      }
+    });
+  };
+
+  async remove(id: string) {
+    try {
+      const deletedShelf = await this.DeleteShelf(id);
+
+      const deletedUser = await this.prismaService.user.delete({
+        where: {
+          userId: id
+        }
+      });
+
+      return { user: deletedUser, shelf: deletedShelf };
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async DeleteShelf(id: string) {
+    return this.prismaService.shelf.delete({
+      where: {
+        userId: id
+      }
+    });
   }
 }

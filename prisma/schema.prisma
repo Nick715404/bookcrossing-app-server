@@ -17,8 +17,9 @@ model User {
   userId String @id @default(cuid()) @map("user_id")
   vkId   String @unique @map("vk_id")
 
-  givenBooks   Int? @map("given_books")
-  recievdBooks Int? @map("recieved_books")
+  name    String
+  surName String  @map("sur_name")
+  avatar  String?
 
   city    String
   regDate DateTime @default(now()) @map("reg_date")
