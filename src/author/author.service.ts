@@ -39,13 +39,23 @@ export class AuthorService {
         }
       });
       return data;
-    } 
+    }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} author`;
+  async remove(id: string) {
+    try {
+      const response = await this.prismaService.author.delete({
+        where: {
+          id: id
+        }
+      })
+      return `Автор с id: ${response.id} удален`;
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -6,10 +6,10 @@ import { json } from 'stream/consumers';
 @Injectable()
 export class BookService {
 
-  // На фронтенде делать проверку правильности записи Имени автора
-  // Указать правильный формат <Фамилия ИО>
-  // Если нет подходящего жанра, то добаалять в жанр "другое"
-  // Продумать логику фильтрации, по накладкам
+  // - На фронтенде делать проверку правильности записи Имени автора
+  // - Указать правильный формат <Фамилия ИО>
+  // - Если нет подходящего жанра, то добаалять в жанр "другое"
+  // - Продумать логику фильтрации, по накладкам
 
   constructor(private readonly prismaService: PrismaService) { }
 
@@ -18,37 +18,31 @@ export class BookService {
 
       const author = await this.prismaService.author.findFirst({
         where: {
-          name: data.bookAuthor
+          name: data.author
         }
       });
 
+      let createdAuthor = null;
+
       if (author === null) {
-        const createAuthor = async () => {
-          const createdAuthor = await this.prismaService.author.create({
-            data: {
-              name: data.bookAuthor
-            }
-          })
-          return createdAuthor;
-        }
-        createAuthor();
+        createdAuthor = await this.CreateAuthor(data);
       }
 
-      console.log(author);
+      console.log(createdAuthor);
 
       const category = await this.prismaService.category.findFirst({
         where: {
-          title: data.bookCategory
+          title: data.categoryTitle
         }
       });
 
       const book = await this.prismaService.book.create({
         data: {
-          isbn: data.bookIsbn,
-          title: data.bookTitle,
-          state: data.bookQuality,
-          description: data.bookDesr,
-          author: author ? author.name : 'функция создания не сработало',
+          isbn: data.isbn,
+          title: data.title,
+          state: data.state,
+          description: data.description,
+          author: author ? author.name : createdAuthor.name,
           categoryTitle: category ? category.title : null,
           // shelf: user.shelf.id,
         }
@@ -57,10 +51,18 @@ export class BookService {
       return book;
     }
     catch (error) {
-      console.log('Error to create new book');
+      console.log(error);
       throw new HttpException(error.message, HttpStatus.CONFLICT);
     }
   }
+
+  async CreateAuthor(data: CreateBookDto) {
+    return await this.prismaService.author.create({
+      data: {
+        name: data.author
+      }
+    })
+  };
 
   async FindBooks() {
     try {

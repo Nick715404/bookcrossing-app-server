@@ -33,7 +33,7 @@ model Book {
   id String @id @default(cuid())
 
   categoryId    Category? @relation(fields: [categoryTitle], references: [title])
-  categoryTitle String    @map("category_title")
+  categoryTitle String?    @map("category_title")
 
   authorid Author? @relation(fields: [author], references: [name])
   author   String?

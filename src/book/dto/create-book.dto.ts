@@ -1,10 +1,10 @@
 export class CreateBookDto {
-  bookTitle: string
-  bookAuthor: string
-  bookQuality?: string
-  bookCategory?: string
-  bookIsbn: string
-  bookDesr?: string
+  title: string
+  author: string
+  state?: string
+  categoryTitle?: string
+  isbn: string
+  description?: string
   shelfId: string
-  user: string
+  user?: string
 }
