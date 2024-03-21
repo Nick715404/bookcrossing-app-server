@@ -55,12 +55,12 @@ export class ImageService {
   }
 
   async findOne(id: string) {
-    const userImages = await this.prismaService.image.findMany({
+    const bookImages = await this.prismaService.image.findMany({
       where: {
         bookId: id
       }
     })
-    return userImages;
+    return bookImages;
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {
