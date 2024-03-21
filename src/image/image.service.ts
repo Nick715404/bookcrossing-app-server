@@ -3,6 +3,9 @@ import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs/promises'
+import { uploadsDir } from 'utils/absolute-path';
+const { join } = require("path");
+
 
 @Injectable()
 export class ImageService {
@@ -16,8 +19,10 @@ export class ImageService {
         const timeStamp = new Date().toISOString().replace(/[-:.]/g, '');
         const imagePath = `images/${timeStamp}_${image.originalname}`;
 
+        const rootPath = join(__dirname, "../../../uploads");
+
         savedImages.push(imagePath);
-        await fs.writeFile(`${__dirname}/../uploads${imagePath}`, image.buffer);
+        await fs.writeFile(`${rootPath}/${imagePath}`, image.buffer);
       }
 
       const book = await this.prismaService.book.findUnique({
@@ -27,7 +32,7 @@ export class ImageService {
       })
 
       if (!book) {
-        throw new Error('Юзер не найден');
+        throw new Error('Книга не найдена');
       }
 
       const createdImages = await this.prismaService.image.createMany({
@@ -41,7 +46,7 @@ export class ImageService {
       return createdImages;
     }
     catch (error) {
-      throw new HttpException('Ошибка в сервисе', HttpStatus.CONFLICT);
+      throw new HttpException(error.message, HttpStatus.CONFLICT);
     }
   }
 
@@ -49,8 +54,13 @@ export class ImageService {
     return `This action returns all image`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} image`;
+  async findOne(id: string) {
+    const userImages = await this.prismaService.image.findMany({
+      where: {
+        bookId: id
+      }
+    })
+    return userImages;
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {
