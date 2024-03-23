@@ -26,14 +26,14 @@ model User {
 
   favourites Favourites[]
   books      Book[]
-  shelf      Shelf[]
+  shelf      Shelf?
 }
 
 model Book {
   id String @id @default(cuid())
 
   categoryId    Category? @relation(fields: [categoryTitle], references: [title])
-  categoryTitle String?    @map("category_title")
+  categoryTitle String?   @map("category_title")
 
   authorid Author? @relation(fields: [author], references: [name])
   author   String?
@@ -41,7 +41,7 @@ model Book {
   ownerid User?   @relation(fields: [owner], references: [userId])
   owner   String?
 
-  isbn  String
+  isbn  String?
   title String
   state String
 

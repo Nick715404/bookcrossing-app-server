@@ -3,8 +3,8 @@ export class CreateBookDto {
   author: string
   state?: string
   categoryTitle?: string
-  isbn: string
+  isbn?: string
   description?: string
-  shelfId: string
-  user?: string
+  userId?: string
+  shelfId?: string
 }

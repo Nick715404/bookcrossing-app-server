@@ -62,10 +62,10 @@ export class UserService {
     }
   };
 
-  async FindCurrentUser(vkid: string) {
+  async FindCurrentUser(id: string) {
     return this.prismaService.user.findUnique({
       where: {
-        vkId: vkid
+        vkId: id
       }
     });
   };

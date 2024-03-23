@@ -13,7 +13,14 @@ export class ShelfService {
           userId: id
         }
       });
-      return shelf;
+
+      const booksOnShelf = await this.prisma.book.findMany({
+        where: {
+          shelf: shelf.id
+        }
+      })
+
+      return { info: shelf, books: booksOnShelf };
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

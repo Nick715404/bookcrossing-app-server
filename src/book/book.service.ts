@@ -1,13 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { json } from 'stream/consumers';
 
 @Injectable()
 export class BookService {
 
-  // - На фронтенде делать проверку правильности записи Имени автора
-  // - Указать правильный формат <Фамилия ИО>
   // - Если нет подходящего жанра, то добаалять в жанр "другое"
   // - Продумать логику фильтрации, по накладкам
 
@@ -28,13 +25,13 @@ export class BookService {
         createdAuthor = await this.CreateAuthor(data);
       }
 
-      console.log(createdAuthor);
-
       const category = await this.prismaService.category.findFirst({
         where: {
           title: data.categoryTitle
         }
       });
+
+      const shelf = await this.FindShelf(data.userId);
 
       const book = await this.prismaService.book.create({
         data: {
@@ -44,7 +41,8 @@ export class BookService {
           description: data.description,
           author: author ? author.name : createdAuthor.name,
           categoryTitle: category ? category.title : null,
-          // shelf: user.shelf.id,
+          shelf: shelf.id,
+          owner: data.userId
         }
       });
 
@@ -62,6 +60,14 @@ export class BookService {
         name: data.author
       }
     })
+  };
+
+  async FindShelf(id: string) {
+    return await this.prismaService.shelf.findUnique({
+      where: {
+        userId: id
+      }
+    });
   };
 
   async FindBooks() {
