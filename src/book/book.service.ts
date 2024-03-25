@@ -63,7 +63,7 @@ export class BookService {
   };
 
   async FindShelf(id: string) {
-    return await this.prismaService.shelf.findUnique({
+    return await this.prismaService.shelf.findFirst({
       where: {
         userId: id
       }
