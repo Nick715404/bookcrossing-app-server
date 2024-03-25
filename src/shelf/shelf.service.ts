@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AddBookToShelfDto } from './dto/add-book-to-shelf.dto';
+import { GetShelf } from 'src/utils/shelf/shelf.utils';
 
 @Injectable()
 export class ShelfService {
@@ -25,6 +27,6 @@ export class ShelfService {
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-  }
+  };
 
 }

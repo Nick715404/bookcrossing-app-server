@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class BookService {
 
-  // - Если нет подходящего жанра, то добаалять в жанр "другое"
+  // - Если нет подходящего жанра, то добавлять в жанр "другое"
   // - Продумать логику фильтрации, по накладкам
 
   constructor(private readonly prismaService: PrismaService) { }
