@@ -93,16 +93,34 @@ export class BookService {
 
   async DeleteBook(id: string) {
     try {
+      const bookPhoto = await this.FindBookPhoto(id);
+      const deletedPhoto = await this.DeletePhoto(bookPhoto.id);
       const response = await this.prismaService.book.delete({
         where: {
           id: id
         }
       })
-      return `Книга с id: ${response.id} удален`;
+      return `Книга с id: ${response.id} удалена и ее фотография с id: ${deletedPhoto.id}`;
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async FindBookPhoto(id: string) {
+    return this.prismaService.image.findFirst({
+      where: {
+        bookId: id
+      }
+    })
+  }
+
+  async DeletePhoto(id: string) {
+    return this.prismaService.image.delete({
+      where: {
+        id: id
+      }
+    })
   }
 
 }

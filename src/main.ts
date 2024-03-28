@@ -9,7 +9,9 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   });
-  app.useStaticAssets(join(__dirname, '../../uploads'));
+  app.useStaticAssets(join(__dirname, '../uploads'));
+  const pathName = join(__dirname, '../uploads');
+  console.log(pathName);
   await app.listen(3100);
 }
 bootstrap();

@@ -17,7 +17,8 @@ export class ImageService {
         const timeStamp = new Date().toISOString().replace(/[-:.]/g, '');
         const imagePath = `images/${timeStamp}_${image.originalname}`;
 
-        const rootPath = join(__dirname, "../../../uploads");
+        const rootPath = join(__dirname, "../../uploads");
+        console.log(rootPath);
 
         savedImages.push(imagePath);
         await fs.writeFile(`${rootPath}/${imagePath}`, image.buffer);
@@ -53,7 +54,7 @@ export class ImageService {
   }
 
   async findOne(id: string) {
-    const bookImages = await this.prismaService.image.findMany({
+    const bookImages = await this.prismaService.image.findFirst({
       where: {
         bookId: id
       }
