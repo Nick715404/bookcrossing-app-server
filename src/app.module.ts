@@ -9,9 +9,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ImageModule } from './image/image.module';
 import { CategoryModule } from './category/category.module';
 import { ShelfModule } from './shelf/shelf.module';
+import { FavouritesModule } from './favourites/favourites.module';
 
 @Module({
-  imports: [BookModule, ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthorModule, PrismaModule, ImageModule, CategoryModule, ShelfModule],
+  imports: [BookModule, ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthorModule, PrismaModule, ImageModule, CategoryModule, ShelfModule, FavouritesModule],
   controllers: [AppController],
   providers: [AppService],
 })

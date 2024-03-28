@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -12,8 +11,9 @@ export class UserService {
     try {
       const user = await this.CreateUser(data)
       const shelf = await this.CreateShelf(user.userId)
+      const favorites = await this.CreateFavorites(user.userId);
 
-      return { user: user, shelf: shelf }
+      return { user: user, shelf: shelf, favorites: favorites }
 
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.CONFLICT)
@@ -40,6 +40,17 @@ export class UserService {
         }
       }
     });
+  }
+
+  async CreateFavorites(userId: string) {
+    return await this.prismaService.favourites.create({
+      data: {
+        user: userId,
+        books: {
+          create: []
+        }
+      }
+    })
   }
 
   async findAll() {
