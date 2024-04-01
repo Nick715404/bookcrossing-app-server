@@ -11,7 +11,7 @@ async function bootstrap() {
   });
   app.useStaticAssets(join(__dirname, '../uploads'));
   const pathName = join(__dirname, '../uploads');
-  console.log(pathName);
+  // console.log(pathName);
   await app.listen(3100);
 }
 bootstrap();

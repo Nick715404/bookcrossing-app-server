@@ -18,7 +18,7 @@ export class ImageService {
         const imagePath = `images/${timeStamp}_${image.originalname}`;
 
         const rootPath = join(__dirname, "../../uploads");
-        console.log(rootPath);
+        // console.log(rootPath);
 
         savedImages.push(imagePath);
         await fs.writeFile(`${rootPath}/${imagePath}`, image.buffer);

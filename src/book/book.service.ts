@@ -94,6 +94,16 @@ export class BookService {
   async DeleteBook(id: string) {
     try {
       const bookPhoto = await this.FindBookPhoto(id);
+
+      if (!bookPhoto) {
+        const response = await this.prismaService.book.delete({
+          where: {
+            id: id
+          }
+        })
+        return response;
+      }
+
       const deletedPhoto = await this.DeletePhoto(bookPhoto.id);
       const response = await this.prismaService.book.delete({
         where: {
