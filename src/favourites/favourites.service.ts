@@ -57,6 +57,8 @@ export class FavouritesService {
         });
       };
 
+      const updatedBook = await this.UpdateFavKeyFromBook(data.bookId, favorites.id);
+
       const updatedFavourites = await this.prismaService.favourites.update({
         where: { user: data.userId },
         data: {
@@ -64,7 +66,7 @@ export class FavouritesService {
         }
       });
 
-      return `Book added to favourite ${updatedFavourites.id}`;
+      return updatedBook;
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.CONFLICT);
@@ -75,6 +77,17 @@ export class FavouritesService {
     return await this.prismaService.book.findFirst({
       where: { id: id }
     })
+  };
+
+  async UpdateFavKeyFromBook(bookId: string, favId: any) {
+    return await this.prismaService.book.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        favourite: favId
+      }
+    });
   }
 
   remove(id: string) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 
@@ -19,6 +19,11 @@ export class BookController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.bookService.FindBookById(id);
+  }
+
+  @Patch('/patch')
+  putBookToFav(userId: string, bookId: string) {
+    return this.bookService.UpdateFavToBook(userId, bookId);
   }
 
   @Delete('delete/:id')

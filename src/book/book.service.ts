@@ -133,4 +133,33 @@ export class BookService {
     })
   }
 
+  async UpdateFavToBook(userId: string, bookId: string) {
+    try {
+      const favorites = await this.prismaService.favourites.findFirst({
+        where: {
+          user: userId
+        }
+      });
+
+      if (!favorites) {
+        throw new HttpException('Fav not found', HttpStatus.BAD_REQUEST);
+      }
+
+      const book = await this.prismaService.book.update({
+        where: {
+          id: bookId,
+        },
+        data: {
+          favourite: favorites.id
+        }
+      });
+
+      return book;
+    }
+    catch (error) {
+      console.log(error);
+
+    }
+  }
+
 }
