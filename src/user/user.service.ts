@@ -23,10 +23,11 @@ export class UserService {
   async CreateUser(data: CreateUserDto) {
     return await this.prismaService.user.create({
       data: {
-        vkId: data.vkid,
-        city: data.city,
-        name: data.name,
-        surName: data.surName,
+        vkId: data.id,
+        city: data.city.title,
+        name: data.first_name,
+        surName: data.last_name,
+        avatar: data.photo_100
       }
     });
   }
@@ -63,7 +64,7 @@ export class UserService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     try {
       const user = await this.FindCurrentUser(id);
       return user;
@@ -73,10 +74,11 @@ export class UserService {
     }
   };
 
-  async FindCurrentUser(id: string) {
-    return this.prismaService.user.findUnique({
+  async FindCurrentUser(id: number) {
+    const userVkId = typeof id === 'string' ? parseInt(id, 10) : id;
+    return this.prismaService.user.findFirst({
       where: {
-        vkId: id
+        vkId: userVkId
       }
     });
   };

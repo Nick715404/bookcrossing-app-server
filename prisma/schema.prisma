@@ -15,7 +15,7 @@ enum State {
 
 model User {
   userId String @id @default(cuid()) @map("user_id")
-  vkId   String @unique @map("vk_id")
+  vkId   Int    @unique @map("vk_id")
 
   name    String
   surName String  @map("sur_name")
