@@ -29,6 +29,7 @@ export class BookService {
       });
 
       const shelf = await this.FindShelf(data.userId);
+      const user = await this.FindVkId(data.userId);
 
       const book = await this.prismaService.book.create({
         data: {
@@ -39,7 +40,7 @@ export class BookService {
           author: author ? author.name : createdAuthor.name,
           categoryTitle: category ? category.title : null,
           shelf: shelf.id,
-          owner: data.userId
+          owner: user.vkId,
         }
       });
 
@@ -49,6 +50,14 @@ export class BookService {
       console.log(error);
       throw new HttpException(error.message, HttpStatus.CONFLICT);
     }
+  }
+
+  async FindVkId(id: string) {
+    return this.prismaService.user.findFirst({
+      where: {
+        userId: id
+      }
+    })
   }
 
   async CreateAuthor(data: CreateBookDto) {
@@ -132,6 +141,8 @@ export class BookService {
       }
     })
   }
+
+  // - Проверить метод
 
   async UpdateFavToBook(userId: string, bookId: string) {
     try {

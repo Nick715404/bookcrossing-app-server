@@ -19,7 +19,7 @@ CREATE TABLE "Book" (
     "id" TEXT NOT NULL,
     "category_title" TEXT,
     "author" TEXT,
-    "owner" TEXT,
+    "owner" INTEGER,
     "isbn" TEXT,
     "title" TEXT NOT NULL,
     "state" TEXT NOT NULL,
@@ -96,7 +96,7 @@ ALTER TABLE "Book" ADD CONSTRAINT "Book_category_title_fkey" FOREIGN KEY ("categ
 ALTER TABLE "Book" ADD CONSTRAINT "Book_author_fkey" FOREIGN KEY ("author") REFERENCES "Author"("name") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Book" ADD CONSTRAINT "Book_owner_fkey" FOREIGN KEY ("owner") REFERENCES "User"("user_id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Book" ADD CONSTRAINT "Book_owner_fkey" FOREIGN KEY ("owner") REFERENCES "User"("vk_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Book" ADD CONSTRAINT "Book_favourite_fkey" FOREIGN KEY ("favourite") REFERENCES "Favourites"("id") ON DELETE SET NULL ON UPDATE CASCADE;

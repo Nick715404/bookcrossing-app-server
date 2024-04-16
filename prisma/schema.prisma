@@ -38,8 +38,8 @@ model Book {
   authorid Author? @relation(fields: [author], references: [name])
   author   String?
 
-  ownerid User?   @relation(fields: [owner], references: [userId])
-  owner   String?
+  ownerid User? @relation(fields: [owner], references: [vkId])
+  owner   Int?
 
   isbn  String?
   title String
