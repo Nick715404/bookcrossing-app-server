@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { Book } from '@prisma/client';
 
 @Controller('book')
 export class BookController {
@@ -25,6 +26,11 @@ export class BookController {
   putBookToFav(userId: string, bookId: string) {
     return this.bookService.UpdateFavToBook(userId, bookId);
   }
+
+  /*@Patch('/edit/:id')
+  updateBook(@Param('id') id: string, @Body() newData: Partial<Book>) {
+    return this.bookService.updateBook(id, newData);
+  } */
 
   @Delete('delete/:id')
   remove(@Param('id') id: string) {

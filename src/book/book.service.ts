@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Book } from '@prisma/client';
 
 @Injectable()
 export class BookService {
@@ -51,6 +52,27 @@ export class BookService {
       throw new HttpException(error.message, HttpStatus.CONFLICT);
     }
   }
+
+  /*async updateBook(id: string, newData: Partial<Book>) {
+    try {
+        const existingBook = await this.prismaService.book.findUnique({
+            where: { id }
+        });
+
+        if (!existingBook) {
+            throw new Error(`Book with id ${id} not found`);
+        }
+
+        const updatedBook = await this.prismaService.book.update({
+            where: { id },
+            data: newData
+        });
+
+        return updatedBook;
+    } catch (error) {
+        throw new Error(`Failed to update book: ${error.message}`);
+    }
+  }*/
 
   async FindVkId(id: string) {
     return this.prismaService.user.findFirst({
