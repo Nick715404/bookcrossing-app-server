@@ -10,9 +10,10 @@ import { ImageModule } from './image/image.module';
 import { CategoryModule } from './category/category.module';
 import { ShelfModule } from './shelf/shelf.module';
 import { FavouritesModule } from './favourites/favourites.module';
+import { CitiesModule } from './cities/cities.module';
 
 @Module({
-  imports: [BookModule, ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthorModule, PrismaModule, ImageModule, CategoryModule, ShelfModule, FavouritesModule],
+  imports: [BookModule, ConfigModule.forRoot({ isGlobal: true }), UserModule, AuthorModule, PrismaModule, ImageModule, CategoryModule, ShelfModule, FavouritesModule, CitiesModule],
   controllers: [AppController],
   providers: [AppService],
 })

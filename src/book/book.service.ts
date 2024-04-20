@@ -2,11 +2,50 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Book } from '@prisma/client';
+import { UpdateBookDTO } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
 
   constructor(private readonly prismaService: PrismaService) { }
+
+  async SearchBooks(query) {
+    try {
+      const books = await this.prismaService.book.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: query,
+                mode: 'insensitive',
+              }
+            },
+            {
+              author: {
+                contains: query,
+                mode: 'insensitive',
+              }
+            },
+            {
+              isbn: {
+                contains: query,
+                mode: 'insensitive',
+              }
+            },
+            {
+              categoryTitle: {
+                contains: query,
+                mode: 'insensitive',
+              }
+            },
+          ],
+        },
+      });
+      return { books: books };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.CONFLICT);
+    }
+  }
 
   async CreateBook(data: CreateBookDto) {
     try {
@@ -53,26 +92,36 @@ export class BookService {
     }
   }
 
-  /*async updateBook(id: string, newData: Partial<Book>) {
+  async updateBook(id: string, newData: UpdateBookDTO) {
     try {
-        const existingBook = await this.prismaService.book.findUnique({
-            where: { id }
-        });
+      const existingBook = await this.prismaService.book.findUnique({
+        where: { id: newData.id }
+      });
 
-        if (!existingBook) {
-            throw new Error(`Book with id ${id} not found`);
+      if (!existingBook) {
+        throw new Error(`Book with id ${id} not found`);
+      }
+
+      const updatedBook = await this.prismaService.book.update({
+        where: {
+          id: existingBook.id
+        },
+        data: {
+          isbn: newData.isbn,
+          title: newData.title,
+          state: newData.state,
+          description: newData.description,
+          author: newData.author,
+          categoryTitle: newData.categoryTitle !== null ? newData.categoryTitle : 'Другое', // Ensure categoryTitle is not null
         }
+      });
 
-        const updatedBook = await this.prismaService.book.update({
-            where: { id },
-            data: newData
-        });
-
-        return updatedBook;
+      return updatedBook;
     } catch (error) {
-        throw new Error(`Failed to update book: ${error.message}`);
+      throw new Error(`Failed to update book: ${error.message}`);
     }
-  }*/
+  }
+
 
   async FindVkId(id: string) {
     return this.prismaService.user.findFirst({

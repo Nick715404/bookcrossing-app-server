@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetFavFromUser } from 'src/utils/fav/fav.utils';
 import { PutBookToFav } from './dto/putBookToFav.dto';
+
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { RemoveBookFromFavDTO } from './dto/removeBookFromFav.dto';
 
 @Injectable()
 export class FavouritesService {
@@ -59,12 +60,12 @@ export class FavouritesService {
 
       const updatedBook = await this.UpdateFavKeyFromBook(data.bookId, favorites.id);
 
-      const updatedFavourites = await this.prismaService.favourites.update({
-        where: { user: data.userId },
-        data: {
-          books: { connect: { id: data.bookId } }
-        }
-      });
+      // const updatedFavourites = await this.prismaService.favourites.update({
+      //   where: { user: data.userId },
+      //   data: {
+      //     books: { connect: { id: data.bookId } }
+      //   }
+      // });
 
       return updatedBook;
     }
@@ -79,7 +80,7 @@ export class FavouritesService {
     })
   };
 
-  async UpdateFavKeyFromBook(bookId: string, favId: any) {
+  async UpdateFavKeyFromBook(bookId: string, favId: string) {
     return await this.prismaService.book.update({
       where: {
         id: bookId,
@@ -90,7 +91,47 @@ export class FavouritesService {
     });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} favourite`;
+  async RemoveBooksFav(bookId: string, favId: string) {
+    return await this.prismaService.book.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        favourite: null
+      }
+    });
   }
+
+  async remove(data: RemoveBookFromFavDTO) {
+    const book = await this.FindBookById(data.bookId);
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        vkId: data.userId
+      }
+    })
+
+    if (!book) {
+      throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+    }
+
+    let favorites = await this.prismaService.favourites.findUnique({
+      where: { user: user.userId }
+    });
+
+    const response = await this.removeFromFav(favorites.id, data.bookId);
+    const updatedBook = await this.RemoveBooksFav(data.bookId, favorites.id);
+    return { message: 'Book has been removed!', book: updatedBook }
+  }
+
+  async removeFromFav(favId: string, bookId: string) {
+    return await this.prismaService.favourites.update({
+      where: { id: favId },
+      data: {
+        books: {
+          disconnect: { id: bookId }
+        }
+      }
+    });
+  }
+
 }

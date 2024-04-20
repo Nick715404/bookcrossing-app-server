@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { FavouritesService } from './favourites.service';
 import { PutBookToFav } from './dto/putBookToFav.dto';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { RemoveBookFromFavDTO } from './dto/removeBookFromFav.dto';
 
 @Controller('favorites')
 export class FavouritesController {
@@ -16,8 +17,8 @@ export class FavouritesController {
     return this.favouritesService.findOne(id);
   }
 
-  @Delete('delete/:id')
-  remove(@Param('id') id: string) {
-    return this.favouritesService.remove(id);
+  @Post('delete')
+  remove(@Body() data: RemoveBookFromFavDTO) {
+    return this.favouritesService.remove(data);
   }
 }
