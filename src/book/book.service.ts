@@ -122,7 +122,6 @@ export class BookService {
     }
   }
 
-
   async FindVkId(id: string) {
     return this.prismaService.user.findFirst({
       where: {
@@ -190,7 +189,7 @@ export class BookService {
           id: id
         }
       })
-      return `Книга с id: ${response.id} удалена и ее фотография с id: ${deletedPhoto.id}`;
+      return response;
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

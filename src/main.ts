@@ -10,6 +10,6 @@ async function bootstrap() {
     origin: '*',
   });
   app.useStaticAssets(join(__dirname, '../uploads'));
-  await app.listen(process.env.PORT, '0.0.0.0');
+  await app.listen(3100);
 }
 bootstrap();
