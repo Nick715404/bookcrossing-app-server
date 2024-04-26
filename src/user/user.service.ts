@@ -67,9 +67,6 @@ export class UserService {
   async findOne(id: number) {
     try {
       const user = await this.FindCurrentUser(id);
-
-      console.log(user);
-
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
