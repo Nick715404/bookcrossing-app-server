@@ -53,6 +53,32 @@ export class ImageService {
     return `This action returns all image`;
   }
 
+  async updateImages(images: any, bookId: string) {
+    try {
+      const savedImages = [];
+
+      for (const image of images) {
+        const timeStamp = new Date().toISOString().replace(/[-:.]/g, '');
+        const imagePath = `images/${timeStamp}_${image.originalname}`;
+        const rootPath = join(__dirname, "../../uploads");
+
+        savedImages.push(imagePath);
+        await fs.writeFile(`${rootPath}/${imagePath}`, image.buffer);
+      }
+
+      const createdImages = await this.prismaService.image.createMany({
+        data: savedImages.map((path) => ({
+          path,
+          bookId,
+          filename: path.split('/').pop(),
+        }))
+      });
+    }
+    catch (error) {
+      throw new Error(`Failed to update images: ${error.message}`);
+    }
+  }
+
   async findOne(id: string) {
     const bookImages = await this.prismaService.image.findFirst({
       where: {
@@ -60,10 +86,6 @@ export class ImageService {
       }
     })
     return bookImages;
-  }
-
-  update(id: number, updateImageDto: UpdateImageDto) {
-    return `This action updates a #${id} image`;
   }
 
   remove(id: number) {
