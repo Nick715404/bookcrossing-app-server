@@ -10,6 +10,9 @@ async function bootstrap() {
 		cert: fs.readFileSync(`${process.env.SSL_CERT_PATH}`),
 	};
 
+	console.log(process.env.SSL_KEY_PATH);
+	console.log(process.env.SSL_CERT_PATH);
+
 	const app = await NestFactory.create<NestExpressApplication>(AppModule, {
 		httpsOptions,
 	});
