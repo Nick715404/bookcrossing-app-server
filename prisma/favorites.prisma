@@ -1,0 +1,6 @@
+model Favorites {
+  id     String @id @default(uuid())
+  userId User   @relation(fields: [user], references: [userId])
+  user   String @unique
+  books  Book[]
+}

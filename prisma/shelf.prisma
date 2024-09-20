@@ -1,0 +1,6 @@
+model Shelf {
+  id     String @id @default(cuid())
+  books  Book[]
+  user   User   @relation(fields: [userId], references: [userId])
+  userId String @unique
+}
