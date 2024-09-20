@@ -1,0 +1,15 @@
+model User {
+  userId String @id @default(cuid()) @map("user_id")
+  vkId   Int    @unique @map("vk_id")
+
+  name    String
+  surName String  @map("sur_name")
+  avatar  String?
+
+  city    String
+  regDate DateTime @default(now()) @map("reg_date")
+
+  favourites Favorites[]
+  books      Book[]
+  shelf      Shelf?
+}

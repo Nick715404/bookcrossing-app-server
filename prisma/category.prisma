@@ -1,0 +1,6 @@
+model Category {
+  id        String @id @default(cuid())
+  title     String @unique
+  imageName String @map("image_name")
+  books     Book[]
+}

@@ -1,0 +1,27 @@
+model Book {
+  id String @id @default(cuid())
+
+  categoryId    Category? @relation(fields: [categoryTitle], references: [title])
+  categoryTitle String?   @map("category_title")
+
+  authorid Author? @relation(fields: [author], references: [name])
+  author   String?
+
+  ownerid User? @relation(fields: [owner], references: [vkId])
+  owner   Int?
+
+  isbn  String?
+  title String
+  state String
+
+  fav       Favorites? @relation(fields: [favourite], references: [id])
+  favourite String?
+
+  shelfId Shelf?  @relation(fields: [shelf], references: [id])
+  shelf   String?
+
+  releaseDate DateTime @default(now()) @map("release_date")
+
+  description String?
+  images      Image[]
+}
