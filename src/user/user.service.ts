@@ -42,7 +42,7 @@ export class UserService {
 	}
 
 	async CreateFavorites(userId: string) {
-		return await this.prismaService.favourites.create({
+		return await this.prismaService.favorites.create({
 			data: {
 				user: userId,
 				books: {

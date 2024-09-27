@@ -20,7 +20,7 @@ export class FavouritesService {
 	}
 
 	async GetFavFromUser(id: string) {
-		return await this.prismaService.favourites.findFirst({
+		return await this.prismaService.favorites.findFirst({
 			where: {
 				user: id,
 			},
@@ -43,12 +43,12 @@ export class FavouritesService {
 				throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
 			}
 
-			let favorites = await this.prismaService.favourites.findUnique({
+			let favorites = await this.prismaService.favorites.findUnique({
 				where: { user: data.userId },
 			});
 
 			if (!favorites) {
-				favorites = await this.prismaService.favourites.create({
+				favorites = await this.prismaService.favorites.create({
 					data: {
 						user: data.userId,
 						books: { create: [] },
@@ -114,7 +114,7 @@ export class FavouritesService {
 			throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
 		}
 
-		let favorites = await this.prismaService.favourites.findUnique({
+		let favorites = await this.prismaService.favorites.findUnique({
 			where: { user: user.userId },
 		});
 
@@ -125,7 +125,7 @@ export class FavouritesService {
 	}
 
 	async removeFromFav(favId: string, bookId: string) {
-		return await this.prismaService.favourites.update({
+		return await this.prismaService.favorites.update({
 			where: { id: favId },
 			data: {
 				books: {

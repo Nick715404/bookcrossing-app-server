@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Book } from '@prisma/client';
 import { UpdateBookDTO } from './dto/update-book.dto';
 
 @Injectable()
@@ -209,7 +208,7 @@ export class BookService {
 
 	async UpdateFavToBook(userId: string, bookId: string) {
 		try {
-			const favorites = await this.prismaService.favourites.findFirst({
+			const favorites = await this.prismaService.favorites.findFirst({
 				where: {
 					user: userId,
 				},

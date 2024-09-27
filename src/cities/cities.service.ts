@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class CitiesService {
 	async findAll() {
 		try {
-			const response = await fetch(`${process.env.CITIES_ACCESS_TOKEN}`);
+			const response = await fetch(`${process.env.CITIES_PATH}`);
 
 			if (!response.ok) throw new Error('Server error!');
 

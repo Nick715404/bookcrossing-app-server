@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, Patch, Query } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
-import { Book } from '@prisma/client';
 import { UpdateBookDTO } from './dto/update-book.dto';
 
 @Controller('book')
